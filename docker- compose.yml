@@ -1,0 +1,47 @@
+version: '3'      #Specifies the version of the Docker Compose file.
+
+services:       #Defines the list of services to run.
+  server:       #The name of the service.
+    build:      #Specifies the build configuration for the service.
+      context: ./server       #Specifies the context path, which is the directory containing the server code.
+    ports:        #Defines the port mapping for the service.
+      - "8000:8000"       #Maps port 8000 on the host to port 8000 of the service, allowing access to the service through port 8000 on the host.
+    environment:        #Sets the environment variables for the service.
+      DB_DATABASE: ${PG_DB}       #Sets the database name to the value of ${PG_DB}.
+      DB_HOST: ${PG_HOST}       #Sets the database host to the value of ${PG_HOST}.
+      DB_PASSWORD: ${PG_PASS}       #Sets the database password to the value of ${PG_PASS}.
+      DB_USER: ${PG_USER}       #Sets the database user to the value of ${PG_USER}.
+      DB_PORT: ${PG_PORT}       #Sets the database port to the value of ${PG_PORT}.
+      PRIVATE_STRIPE_KEY: ${PRIVATE_STRIPE_KEY}       #Sets the private Stripe key to the value of ${PRIVATE_STRIPE_KEY}.
+      FRONTEND_URL: ${FRONTEND_URL}       #Sets the frontend URL to the value of ${FRONTEND_URL}.
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}       #Sets the Auth0 audience to the value of ${AUTH0_AUDIENCE}.
+      AUTH0_URL: ${AUTH0_URL}       #Sets the Auth0 URL to the value of ${AUTH0_URL}.
+      DATABASE_URL: postgresql://${PG_USER}:${PG_PASS}@${PG_HOST}:${PG_PORT}/${PG_DB}?schema=public       #Sets the database connection URL.
+    volumes:        #Defines volumes for the service.
+      - ./server:/usr/app       #Mounts the ./server directory on the host to the /usr/app directory in the service, providing the code to the service.
+      - /usr/app/node_modules       #Mounts the /usr/app/node_modules directory of the service as a volume to persistently store dependencies.
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_ROOT_URL: ${ROOT_URL}
+      REACT_APP_PUBLIC_STRIPE_KEY: ${PUBLIC_STRIPE_KEY}
+      REACT_APP_AUTH0_URL: ${AUTH0_URL}
+      REACT_APP_AUTH0_CLIENT_ID: ${AUTH0_CLIENT_ID}
+      REACT_APP_AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      REACT_APP_API_1_URL:  ${ROOT_URL}/api/1
+    volumes:
+      - ./client:/usr/app
+      - /usr/app/node_modules
+    command: npm run start
+  database:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
