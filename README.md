@@ -7,8 +7,15 @@ This guide will help you set up scheduled e2e (end-to-end) testing for a website
 
 Make sure your e2e testing code is stored in a GitHub repository and that you've configured scripts to run these tests. Your testing scripts should use tools like Playwright to execute end-to-end tests for your website.
 
-## Step 2: Create a Cloud Function
+## Step 2: Create a Cloud Function `https://cloud.google.com/functions/docs/deploy`
 
+```
+Option:
+Deploy from:
+[1] local machine
+[2] Cloud Storage
+[3] source repository
+```
 1. In the Google Cloud Console, navigate to Cloud Functions.
 2. Click "Create Function."
 
@@ -45,7 +52,7 @@ Make sure your e2e testing code is stored in a GitHub repository and that you've
 
    e. Deploy it as a Cloud Function.
 
-## Step 3: Set Up a Cloud Scheduler Job
+## Step 3: Set Up a Cloud Scheduler Job `https://cloud.google.com/scheduler/docs/overview`
 
 1. In the Google Cloud Console, navigate to Cloud Scheduler.
 2. Click "Create Job."
